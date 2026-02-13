@@ -56,7 +56,7 @@ function App() {
       ))}
 
       <div className="box" ref={boxRef}>
-        <h1 className="valentine-text">Will you be my Valentine? ❤️</h1>
+        <h1 className="valentine-text">Will you be my noman's Valentine? ❤️</h1>
 
         <button className="yes-btn" onClick={() => setShowPopup(true)}>
           Yes 💖
