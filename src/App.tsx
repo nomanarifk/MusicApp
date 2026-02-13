@@ -1,87 +1,91 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
-import personImg from "./assets/person.jpg";
-import songFile from "./assets/tere-hawale-kar-diya.mp3"; // your audio file
-import { FaPause, FaHeadphones } from "react-icons/fa";
 
 function App() {
-  const [open, setOpen] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true); // start as playing
-  const [currentTime, setCurrentTime] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const [noPos, setNoPos] = useState({ top: "250px", left: "250px" });
+  const boxRef = useRef<HTMLDivElement>(null);
+  const noBtnRef = useRef<HTMLButtonElement>(null);
 
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const handleNoHover = () => {
+    const box = boxRef.current;
+    const btn = noBtnRef.current;
+    if (!box || !btn) return;
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    const boxRect = box.getBoundingClientRect();
+    const maxTop = boxRect.height - btn.offsetHeight - 20;
+    const maxLeft = boxRect.width - btn.offsetWidth - 20;
 
-    audio.play().catch(() => {
-      // autoplay might be blocked by browser
-      setIsPlaying(false);
-    });
+    const newTop = Math.max(10, Math.random() * maxTop);
+    const newLeft = Math.max(10, Math.random() * maxLeft);
 
-    const updateTime = () => setCurrentTime(audio.currentTime);
-    audio.addEventListener("timeupdate", updateTime);
-
-    return () => audio.removeEventListener("timeupdate", updateTime);
-  }, []);
-
-  const togglePlay = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-    } else {
-      audio.play();
-      setIsPlaying(true);
-    }
-  };
-
-  const formatTime = (sec: number) => {
-    const m = Math.floor(sec / 60)
-      .toString()
-      .padStart(2, "0");
-    const s = Math.floor(sec % 60)
-      .toString()
-      .padStart(2, "0");
-    return `${m}:${s}`;
+    setNoPos({ top: `${newTop}px`, left: `${newLeft}px` });
   };
 
   return (
     <div className="container">
-      <div className="box">
-        {1 && (
-          <>
-            <div className="circle-container" onClick={() => setOpen(true)}>
-              <img
-                src={personImg}
-                className={`circle-image ${isPlaying ? "spin" : ""}`}
-              />
+
+      {showIntro && (
+        <div className="popup-overlay">
+          <div className="popup intro-popup">
+            <h2>Hi Beautiful,</h2>
+            <p>Get ready for the biggest challenge of your life, choosing your valentine.</p>
+            <p>You'll be asked a question and aapne No press krna hai, if you are successfull in doing that toh whatever you'll say, i'll do it (that toh i'll do regardless bhi) Hihihi</p>
+            <p>Pretty difficult decision, lets make it happen !!</p>
+            <button className="close-btn" onClick={() => setShowIntro(false)}>
+              OK! I'm Ready 🚀
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Background Hearts */}
+      {[...Array(15)].map((_, i) => (
+        <div 
+          key={i} 
+          className="heart" 
+          style={{ 
+            left: `${Math.random() * 100}%`, 
+            animationDelay: `${Math.random() * 5}s`,
+            fontSize: `${Math.random() * 20 + 10}px` 
+          }}
+        >
+          ❤️
+        </div>
+      ))}
+
+      <div className="box" ref={boxRef}>
+        <h1 className="valentine-text">Will you be my Valentine? ❤️</h1>
+
+        <button className="yes-btn" onClick={() => setShowPopup(true)}>
+          Yes 💖
+        </button>
+
+        <button
+          className="no-btn"
+          ref={noBtnRef}
+          style={{ 
+            top: noPos.top, 
+            left: noPos.left, 
+            position: "absolute",
+            transition: "all 0.2s ease-out"
+          }}
+          onMouseEnter={handleNoHover}
+        >
+          No 😢
+        </button>
+
+        {showPopup && (
+          <div className="popup-overlay">
+            <div className="popup">
+              <h2>🎉 YAY! 🎉</h2>
+              <p>You are Noman's Valentine! ❤️</p>
+              <p>Love you so much sweetheart!!</p>
+              <button className="close-btn" onClick={() => setShowPopup(false)}>
+                Close
+              </button>
             </div>
-
-            <div className="music-info">
-              <div className="music-text">
-                <div className="music-left" onClick={togglePlay}>
-                  <FaHeadphones className="music-icon" />
-                </div>
-                <div className="artist">Arijit Singh</div>
-                <div className="title">Tere Hawale Kardiya</div>
-                <div className="music-time">
-                  {formatTime(currentTime)} / 05:20
-                </div>
-              </div>
-
-            </div>
-
-            <audio ref={audioRef} src={songFile}></audio>
-          </>
-        )}
-
-        {open && (
-          <div className="image-cover" onClick={() => setOpen(false)}>
-            <img src={personImg} />
           </div>
         )}
       </div>
