@@ -31,7 +31,6 @@ function App() {
           <div className="popup intro-popup">
             <h2>Hi Beautiful,</h2>
             <p>Get ready for the biggest challenge of your life, choosing your valentine.</p>
-            <p>You'll be asked a question and aapne No press krna hai, if you are successfull in doing that toh whatever you'll say, i'll do it (that toh i'll do regardless bhi) Hihihi</p>
             <p>Pretty difficult decision, lets make it happen !!</p>
             <button className="close-btn" onClick={() => setShowIntro(false)}>
               OK! I'm Ready 🚀
@@ -56,7 +55,7 @@ function App() {
       ))}
 
       <div className="box" ref={boxRef}>
-        <h1 className="valentine-text">Will you be my noman's Valentine? ❤️</h1>
+        <h1 className="valentine-text">Will you be my Valentine? ❤️</h1>
 
         <button className="yes-btn" onClick={() => setShowPopup(true)}>
           Yes 💖
@@ -79,9 +78,8 @@ function App() {
         {showPopup && (
           <div className="popup-overlay">
             <div className="popup">
-              <h2>🎉 YAY! 🎉</h2>
-              <p>You are Noman's Valentine! ❤️</p>
-              <p>Love you so much sweetheart!!</p>
+              <h2>🎉 Congratulations 🎉</h2>
+              <p>You are now my lawfully Valentine! ❤️</p>
               <button className="close-btn" onClick={() => setShowPopup(false)}>
                 Close
               </button>
